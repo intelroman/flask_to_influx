@@ -1,0 +1,7 @@
+pproj/
+__pycache__/
+**/__pycache__/
+logs/
+db/
+!.gitignore
+!**.gitkeep

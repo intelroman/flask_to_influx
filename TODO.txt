@@ -1,0 +1,13 @@
+1. Implement logging - done .. but ned put in place on each module with correct messages. (easy)
+2. Implement cvs - this one needs pandas to pars csv and csv formats to process. - (Moderate)
+3. Implement YAML - need to make a ingest data template that will be accepted for pars and then pars taht template. - (Moderate)
+4. Implement XML - need to make a ingest data template that will be accepted for pars and then pars taht template. - (Moderate )
+5. Implement authentication system - with file (easy) or DB (easy) - done
+6. Implemnet Barrer Auth token.
+6. More linux counters (Moderate need to understand each type of file and create patterns for parsing)
+
+Make a install document and add gunicorn.
+
+Great to have:
+influx db apis : CRUD / user, database , measurements - already done in other project need a new implementation as the other is private.
+Implement python setup.py
