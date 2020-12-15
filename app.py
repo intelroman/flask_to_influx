@@ -100,11 +100,11 @@ data=$(cat /proc/net/dev); curl --location --request POST 'http://<ip>:5000/linu
 def proc_net_dev():
     logging.info ('Starting prcessing %s for ip %s ', request.path, (request.environ.get('HTTP_X_REAL_IP', request.remote_addr)))
     import modules.linux.proc_net_dev as net
-    from modules.influxdb import push_data
     data = request.data.decode('utf-8')
     print(request.headers)
     net_dev = net.pars(data)
     infdata = net.to_influx(net_dev)
+    from modules.influxdb import push_data
     return jsonify ({"Status": push_data(infdata)})
 
 '''
