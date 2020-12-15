@@ -100,11 +100,12 @@ data=$(cat /proc/net/dev); curl --location --request POST 'http://<ip>:5000/linu
 def proc_net_dev():
     logging.info ('Starting prcessing %s for ip %s ', request.path, (request.environ.get('HTTP_X_REAL_IP', request.remote_addr)))
     import modules.linux.proc_net_dev as net
+    from modules.influxdb import push_data
     data = request.data.decode('utf-8')
     print(request.headers)
     net_dev = net.pars(data)
     infdata = net.to_influx(net_dev)
-    return jsonify (infdata)
+    return jsonify ({"Status": push_data(infdata)})
 
 '''
 Working with file in postman .. need to figure out why curl is not working.
@@ -119,9 +120,11 @@ def file_proc_net_dev():
     else:
         return "Be sure you use /proc/net/dev or dev file"
     import modules.linux.proc_net_dev as net
+    from modules.influxdb import push_data
     net_dev = net.pars(data)
     infdata = net.to_influx(net_dev)
-    return jsonify (infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 '''
 Linux base curl:
@@ -134,7 +137,8 @@ def proc_net_arp():
     data = request.data.decode('utf-8')
     net_arp = arp.pars(data)
     infdata = arp.to_influx(net_arp)
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 '''
 Working with file in postman .. need to figure out why curl is not working.
@@ -151,7 +155,8 @@ def file_proc_net_arp():
     import modules.linux.proc_net_arp as arp
     net_arp = arp.pars(data)
     infdata = arp.to_influx(net_arp)
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 '''
 Linux base curl:
@@ -165,7 +170,8 @@ def proc_meminfo():
     data = request.data.decode('utf-8')
     mem = meminfo.pars(data, "meminfo")
     infdata = influx.to_influx(mem, "meminfo")
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 '''
 Working with file in postman .. need to figure out why curl is not working.
@@ -183,7 +189,8 @@ def file_proc_meminfo():
     import modules.to_influx as influx 
     mem = meminfo.pars(data, "meminfo")
     infdata = influx.to_influx(mem, "meminfo")
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 '''
 Linux base curl:
@@ -197,7 +204,8 @@ def proc_vmstats():
     data = request.data.decode('utf-8')
     vmstat_ = vmstat.pars(data, "vmstat")
     infdata = influx.to_influx(vmstat_, "vmstat")
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 @app.route('/linux/proc_uptime', methods = ['POST'])
 def proc_uptime():
@@ -207,7 +215,8 @@ def proc_uptime():
     data = request.data.decode('utf-8')
     uptime_ = uptime.pars(data, "uptime")
     infdata = influx.to_influx(uptime_, "uptime")
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 '''
 Linux base curl:
 data=$(cat /proc/diskstats); curl --location --request POST 'http://<ip>:5000/linux/proc_diskstats?tags=0,1,2&vals=3,4,5,6,7,8,9,10,11,12,13' --header 'Content-Type: application/json' --header 'Accept: application/json'  --data-raw "$data"
@@ -225,7 +234,8 @@ def linux_disk():
     data = request.data.decode('utf-8')
     diskstats = pars(data, "diskstats", tag_list, vals_list)
     infdata = influx(diskstats, "diskstats")
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 @app.route('/json/raw', methods = ['POST'])
 def json_raw():
@@ -252,7 +262,8 @@ def json_raw():
     data = request.get_json()
     import modules.to_influx as influx 
     infdata = influx.to_influx(data, "raw")
-    return jsonify(infdata)
+    from modules.influxdb import push_data
+    return jsonify ({"Status": push_data(infdata)})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
